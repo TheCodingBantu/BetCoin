@@ -13,4 +13,4 @@
     
 from decimal import Decimal
 val='15.05'
-print(Decimal(val)) 
+print (((Decimal(12.5 + 1)/2)/Decimal(0.9)),2)
