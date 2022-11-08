@@ -38,4 +38,20 @@ def History(request):
     bets=Bet.objects.all().order_by('-id')
     return render(request, 'index.html', {'bets': bets})
 
+def Graphs(request):
+    bet_one=[]
+    bet_two=[]
+    one_losses=Bet.objects.filter(progression=0).filter(result='l').count()
+    one_draws=Bet.objects.filter(progression=0).filter(result='d').count()
+    one_wins=Bet.objects.filter(progression=0).filter(result='w').count()
+    
+    two_losses=Bet.objects.filter(progression=1).filter(result='l').count()
+    two_draws=Bet.objects.filter(progression=1).filter(result='d').count()
+    two_wins=Bet.objects.filter(progression=1).filter(result='w').count()
+    
+    bet_one.extend((one_wins,one_draws,one_losses))
+    bet_two.extend((two_wins,two_draws,two_losses))
+    
+    return render(request, 'graphs.html', {'one': bet_one,'two':bet_two })
+
   

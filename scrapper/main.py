@@ -1,16 +1,13 @@
-# import requests
-# URL = "http://127.0.0.1:8000/bets/"
+import requests
 
+URL = "http://127.0.0.1:8000/bets/"
 
-
-# def get_last_result():
-#     r = requests.get(url=URL)
-#     try:
-#         data = (r.json())[0]
-#         return data
-#     except:
-#         return None
-    
-from decimal import Decimal
-val='15.05'
-print (((Decimal(12.5 + 1)/2)/Decimal(0.9)),2)
+def post_to_api(progression,result,stake,odds,total_lost):
+        try:
+            jsonData = {"progression":progression,"result": result, "stake": stake,"odds": odds,"total_lost": total_lost}
+            requests.post(URL, data=jsonData)
+            return True
+        except:
+            print('exception')
+            return False
+post_to_api(0,'w',1,1.4,0)

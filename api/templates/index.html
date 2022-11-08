@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -5,18 +7,35 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Bet History</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css"
-    />
+    
     <link
       rel="stylesheet"
       href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap4.min.css"
     />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+    
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="">BetCoin</a>
+          </div>
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="{% url 'history' %}">Home</a></li>
+            <li ><a href="{% url 'graphs' %}">Graphs</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+            <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+          </ul>
+        </div>
+      </nav>
 
-  </head>
-  <body>
+
+
     
     <div class="container mt-5">
 
@@ -28,6 +47,7 @@
         <thead>
           <tr>
             <th>Id</th>
+            <th>Progression</th>
             <th>Odds</th>
             <th>Stake</th>
             <th>Result</th>
@@ -40,6 +60,7 @@
 
           <tr>
             <td>{{ bet.id }}</td>
+            <td>{{ bet.progression }}</td>
             <td>{{ bet.odds }}</td>
             <td>{{ bet.stake }}</td>
             <td>{{ bet.result }}</td>
@@ -50,17 +71,13 @@
         </tbody>
         
       </table>
-    <div style='width:100%;height:400px'>
-      <canvas id="myChart" ></canvas>
 
-    </div>
 
     </div>
   </body>
   <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
   <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
   <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap4.min.js"></script>
-
   <script>
     $(document).ready(function () {
       $("#example").DataTable(
@@ -71,5 +88,6 @@
       
     });
   </script>
+
 
 </html>

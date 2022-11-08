@@ -3,7 +3,7 @@ import datetime
 # Create your models here.
 class Bet(models.Model):
     
-    # progression=models.IntegerField()
+    progression=models.IntegerField()
     result=models.CharField(max_length=64)
     stake=models.FloatField()
     odds=models.FloatField()
