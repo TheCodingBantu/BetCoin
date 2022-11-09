@@ -60,6 +60,7 @@ var data = {
 new Chart("myChart", {
     type: 'bar',
     data: data,
+    
     options: {
         scales: {
             xAxes: [{
@@ -79,8 +80,41 @@ new Chart("myChart", {
                 
             }]
         },
+        plugins: {
+            customScale: {
+              grace: '5%', // Percentage of max value
+              // grace: 40 // Flatout extra value to add
+            }
+          }
         
-    }
+    },
+    plugins: [{
+        id: "customScale",
+        beforeLayout: (chart, options, c) => {
+          let max = Number.MIN_VALUE;
+          let min = Number.MAX_VALUE
+          let grace = options.grace || 0
+    
+          chart.data.datasets.forEach((dataset) => {
+            max = Math.max(max, Math.max(...dataset.data));
+            min = Math.min(min, Math.min(...dataset.data))
+          })
+    
+          if (typeof grace === 'string' && grace.includes('%')) {
+            grace = Number(grace.replace('%', '')) / 100
+    
+            chart.options.scales.yAxes[0].ticks.suggestedMax = max + (max * grace)
+            chart.options.scales.yAxes[0].ticks.suggestedMin = min - (min * grace)
+    
+          } else if (typeof grace === 'number') {
+    
+            chart.options.scales.yAxes[0].ticks.suggestedMax = max + grace
+            chart.options.scales.yAxes[0].ticks.suggestedMin = min - grace
+    
+          }
+    
+        }
+      }]
 });
   </script>
 </html>
