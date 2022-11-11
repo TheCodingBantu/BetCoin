@@ -1,3 +1,4 @@
+from decimal import Decimal
 
 import time
 import requests
@@ -31,7 +32,7 @@ def post_to_api(progression,result,stake,odds,total_lost):
             return False
 
 
-while True:
+def func():
     # switch to double chance
     d_chance = WebDriverWait(driver, 20).until(ec.visibility_of_element_located(
         (By.XPATH, '//*[@id="quick-game-matche-container"]/div[3]/ul/li[4]')))
@@ -63,110 +64,126 @@ while True:
     home_odds = ''
     away_team = ''
     away_odds = ''
+    
 
+    diff_list = []
+    
+    for index,( x, y )in enumerate (zip(without_draw[0::], without_draw[1::])):
+        if(index%2 ==0):
+            diff_list.append(Decimal(y.text) - Decimal(x.text))
+          
+        
+    odd_index=(diff_list.index(min(diff_list)))    
+    
+    print ('smallest difference index', odd_index)
     for i, (a, b) in enumerate(zip(arr_one, without_draw)):
-        if a == 'ARS':
-            b.click()
-            (WebDriverWait(driver, 20).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="quick-bet-container"]/div/div[1]/img')))).click()
-            
-            if ((i+1) % 2 == 0):
-                (without_draw[i-1]).click()
-                (WebDriverWait(driver, 20).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="quick-bet-container"]/div/div[1]/img')))).click()
-                
-                home_odds = (without_draw[i-1]).text
-                away_odds = (without_draw[i]).text
-                away_team = a
-                home_team = (arr_one[i-1])
-            else:
-                (without_draw[i+1]).click()
-                (WebDriverWait(driver, 20).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="quick-bet-container"]/div/div[1]/img')))).click()
-                
-                away_odds = (without_draw[i+1]).text
-                home_odds = (without_draw[i]).text
-                home_team = a
-                away_team = (arr_one[i+1])
+         print(a,b.text)
+    # for i, (a, b) in enumerate(zip(arr_one, without_draw)):
 
-    print(home_team, home_odds, away_team, away_odds)
+        
+    #     if a == 'ARS':
+    #         b.click()
+    #         (WebDriverWait(driver, 20).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="quick-bet-container"]/div/div[1]/img')))).click()
+            
+    #         if ((i+1) % 2 == 0):
+    #             (without_draw[i-1]).click()
+    #             (WebDriverWait(driver, 20).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="quick-bet-container"]/div/div[1]/img')))).click()
+                
+    #             home_odds = (without_draw[i-1]).text
+    #             away_odds = (without_draw[i]).text
+    #             away_team = a
+    #             home_team = (arr_one[i-1])
+    #         else:
+    #             (without_draw[i+1]).click()
+    #             (WebDriverWait(driver, 20).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="quick-bet-container"]/div/div[1]/img')))).click()
+                
+    #             away_odds = (without_draw[i+1]).text
+    #             home_odds = (without_draw[i]).text
+    #             home_team = a
+    #             away_team = (arr_one[i+1])
+
+    # print(home_team, home_odds, away_team, away_odds)
 
  
-    input_container=(WebDriverWait(driver, 20).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="quick-game-matche-container"]/div[6]/div[2]/span'))))
-    input_container.click()
+    # input_container=(WebDriverWait(driver, 20).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="quick-game-matche-container"]/div[6]/div[2]/span'))))
+    # input_container.click()
     
 
-    first_odd_input=(WebDriverWait(driver, 20).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="betslip-container"]/div[3]/div[1]/div[1]/div[2]/div[2]/div[2]/div/div/div/div[1]/span[2]'))))
-    first_odd_input.click()
+    # first_odd_input=(WebDriverWait(driver, 20).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="betslip-container"]/div[3]/div[1]/div[1]/div[2]/div[2]/div[2]/div/div/div/div[1]/span[2]'))))
+    # first_odd_input.click()
     
-    keys = WebDriverWait(driver, 20).until(ec.visibility_of_any_elements_located(
-        (By.XPATH, "//span[contains(@class, 'm-keyboard-key')]")))
+    # keys = WebDriverWait(driver, 20).until(ec.visibility_of_any_elements_located(
+    #     (By.XPATH, "//span[contains(@class, 'm-keyboard-key')]")))
 
-    (keys[13]).click()
-    # the first amount is always for the home team (or the first progression)
-    (keys[0]).click()
+    # (keys[13]).click()
+    # # the first amount is always for the home team (or the first progression)
+    # (keys[0]).click()
     
-    # click done on the keyboard
-    done_input=(WebDriverWait(driver, 20).until(ec.visibility_of_element_located((By.XPATH, '//*[@id="betslip-container"]/div[3]/div[1]/div[1]/div[2]/div[2]/div[2]/div/div/div/div[2]/div/div[2]/span'))))
-    done_input.click()
+    # # click done on the keyboard
+    # done_input=(WebDriverWait(driver, 20).until(ec.visibility_of_element_located((By.XPATH, '//*[@id="betslip-container"]/div[3]/div[1]/div[1]/div[2]/div[2]/div[2]/div/div/div/div[2]/div/div[2]/span'))))
+    # done_input.click()
     
-    second_odd_input=(WebDriverWait(driver, 20).until(ec.visibility_of_element_located((By.XPATH, '//*[@id="betslip-container"]/div[3]/div[1]/div[2]/div[2]/div[2]/div[2]/div/div/div/div[1]/span[2]'))))
-    second_odd_input.click()
-    keys = WebDriverWait(driver, 20).until(ec.visibility_of_any_elements_located((By.XPATH, "//span[contains(@class, 'm-keyboard-key')]")))
+    # second_odd_input=(WebDriverWait(driver, 20).until(ec.visibility_of_element_located((By.XPATH, '//*[@id="betslip-container"]/div[3]/div[1]/div[2]/div[2]/div[2]/div[2]/div/div/div/div[1]/span[2]'))))
+    # second_odd_input.click()
+    # keys = WebDriverWait(driver, 20).until(ec.visibility_of_any_elements_located((By.XPATH, "//span[contains(@class, 'm-keyboard-key')]")))
 
-    (keys[13]).click()
-    (keys[0]).click()
+    # (keys[13]).click()
+    # (keys[0]).click()
 
     
-    place_bet = WebDriverWait(driver, 10).until(
-        ec.visibility_of_element_located((By.CSS_SELECTOR, '#bet-btn > p:nth-child(2)')))
+    # place_bet = WebDriverWait(driver, 10).until(
+    #     ec.visibility_of_element_located((By.CSS_SELECTOR, '#bet-btn > p:nth-child(2)')))
 
-    place_bet.click()
+    # place_bet.click()
 
-    confirm = WebDriverWait(driver, 10).until(
-        ec.visibility_of_element_located((By.XPATH, '//*[@id="confirm-btn"]')))
-    confirm.click()
-    try:
-        kick_off = WebDriverWait(driver, 10).until(ec.visibility_of_element_located(
-            (By.CSS_SELECTOR, '#open-bets-container > div.btn-nav-bottom > div.nav-bottom-right > span > span')))
-        kick_off.click()
-    except:
-        kick_off = WebDriverWait(driver, 10).until(ec.visibility_of_element_located(
-            (By.CSS_SELECTOR, '#open-bets-container > div.btn-nav-bottom > div.nav-bottom-right > span > span')))
-        kick_off.click()
+    # confirm = WebDriverWait(driver, 10).until(
+    #     ec.visibility_of_element_located((By.XPATH, '//*[@id="confirm-btn"]')))
+    # confirm.click()
+    # try:
+    #     kick_off = WebDriverWait(driver, 10).until(ec.visibility_of_element_located(
+    #         (By.CSS_SELECTOR, '#open-bets-container > div.btn-nav-bottom > div.nav-bottom-right > span > span')))
+    #     kick_off.click()
+    # except:
+    #     kick_off = WebDriverWait(driver, 10).until(ec.visibility_of_element_located(
+    #         (By.CSS_SELECTOR, '#open-bets-container > div.btn-nav-bottom > div.nav-bottom-right > span > span')))
+    #     kick_off.click()
 
-    skip_to_result = WebDriverWait(driver, 10).until(ec.visibility_of_element_located(
-        (By.CSS_SELECTOR, '#iv-live-score-running > div.bottom')))
-    skip_to_result.click()
+    # skip_to_result = WebDriverWait(driver, 10).until(ec.visibility_of_element_located(
+    #     (By.CSS_SELECTOR, '#iv-live-score-running > div.bottom')))
+    # skip_to_result.click()
 
-    for i in range(10):
-        imgs = WebDriverWait(driver, 10).until(
-            ec.visibility_of_any_elements_located((By.TAG_NAME, 'img')))
-        try:
-            if (imgs[2]):
-                time.sleep(1)
-        except:
-            break
+    # for i in range(10):
+    #     imgs = WebDriverWait(driver, 10).until(
+    #         ec.visibility_of_any_elements_located((By.TAG_NAME, 'img')))
+    #     try:
+    #         if (imgs[2]):
+    #             time.sleep(1)
+    #     except:
+    #         break
 
-    # get results for both stakes
-    results = WebDriverWait(driver, 10).until(
-        ec.visibility_of_all_elements_located((By.CLASS_NAME, 'score')))
-    home_result = (results[0]).text
-    away_result = (results[1]).text
+    # # get results for both stakes
+    # results = WebDriverWait(driver, 10).until(
+    #     ec.visibility_of_all_elements_located((By.CLASS_NAME, 'score')))
+    # home_result = (results[0]).text
+    # away_result = (results[1]).text
 
-    if home_result > away_result:
-        print(home_team, 'won with odds', home_odds)
-        post_to_api(0,'w',1,home_odds,0)
-        post_to_api(1,'l',1,away_odds,0)
+    # if home_result > away_result:
+    #     print(home_team, 'won with odds', home_odds)
+    #     post_to_api(0,'w',1,home_odds,0)
+    #     post_to_api(1,'l',1,away_odds,0)
         
-    elif home_result == away_result:
-        print('Draw with odds', home_odds, '', away_odds)
-        post_to_api(0,'d',1,home_odds,0)
-        post_to_api(1,'d',1,away_odds,0)
+    # elif home_result == away_result:
+    #     print('Draw with odds', home_odds, '', away_odds)
+    #     post_to_api(0,'d',1,home_odds,0)
+    #     post_to_api(1,'d',1,away_odds,0)
 
-    else:
-        print(away_team, 'won with odds', away_odds)
-        post_to_api(0,'l',1,home_odds,0)
-        post_to_api(1,'w',1,away_odds,0)
+    # else:
+    #     print(away_team, 'won with odds', away_odds)
+    #     post_to_api(0,'l',1,home_odds,0)
+    #     post_to_api(1,'w',1,away_odds,0)
 
 
-    next_round = WebDriverWait(driver, 10).until(ec.visibility_of_element_located(
-        (By.CSS_SELECTOR, '#iv-live-score-result > div.btn-nav-bottom > div.nav-bottom-right > span > div > div:nth-child(1)')))
-    next_round.click()
+    # next_round = WebDriverWait(driver, 10).until(ec.visibility_of_element_located(
+    #     (By.CSS_SELECTOR, '#iv-live-score-result > div.btn-nav-bottom > div.nav-bottom-right > span > div > div:nth-child(1)')))
+    # next_round.click()
+func()

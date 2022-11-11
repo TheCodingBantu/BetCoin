@@ -1,13 +1,14 @@
-import requests
+# initialising _list
+ini_list = [5, 4, 89, 12, 32, 45]
+  
+# printing iniial_list
+print("intial_list", str(ini_list))
+# Calculating difference list
+diff_list = []
+for index,( x, y )in enumerate (zip(ini_list[0::], ini_list[1::])):
+    if(index%2 ==0):
+        diff_list.append(y-x)
 
-URL = "http://127.0.0.1:8000/bets/"
-
-def post_to_api(progression,result,stake,odds,total_lost):
-        try:
-            jsonData = {"progression":progression,"result": result, "stake": stake,"odds": odds,"total_lost": total_lost}
-            requests.post(URL, data=jsonData)
-            return True
-        except:
-            print('exception')
-            return False
-post_to_api(0,'w',1,1.4,0)
+      
+# printing difference list
+print ("difference list: ", str(diff_list))
