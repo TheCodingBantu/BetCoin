@@ -100,25 +100,29 @@ def Graphs(request):
 def get_wins(results):
     my_list = []
     dates = []
-    for i in results:
-        my_list.append(i.result)
+    if(len(results)>0):
+        for i in results:
+            my_list.append(i.result)
 
-    count = 0
-    length = []
-    if len(my_list) > 1:
-        for i in range(1, len(my_list)):
-            if (my_list[i] == 'w' or my_list[i] == 'd'):
-                if my_list[i-1] == 'w' or my_list[i-1] == 'd':
-                    count += 1
-            length.append(count)
-            count = 0
+        count = 0
+        length = []
+        if len(my_list) > 1:
+            for i in range(1, len(my_list)):
+                if (my_list[i] == 'w' or my_list[i] == 'd'):
+                    if my_list[i-1] == 'w' or my_list[i-1] == 'd':
+                        count += 1
+                length.append(count)
+                count = 0
+        else:
+            return 0
+
+        wins = 0
+        for i in range(len(length)):
+            if (length[i] == 1):
+                dates.append((i+1))
+                wins += length[i]
+
+        return ([wins, dates])
     else:
-        return 0
+        return ['']
 
-    wins = 0
-    for i in range(len(length)):
-        if (length[i] == 1):
-            dates.append((i+1))
-            wins += length[i]
-
-    return ([wins, dates])
