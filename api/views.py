@@ -17,6 +17,7 @@ class BetList(APIView):
         return Response(serializer.data)
     
     def post(self,request):
+        print(request)
         serializer=BetSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -52,6 +53,8 @@ def Graphs(request):
     bet_one.extend((one_wins,one_draws,one_losses))
     bet_two.extend((two_wins,two_draws,two_losses))
     
+    
+    
     return render(request, 'graphs.html', {'one': bet_one,'two':bet_two })
-
+    
   

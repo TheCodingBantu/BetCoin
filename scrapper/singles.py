@@ -14,13 +14,14 @@ def get_last_result():
     
     
 def post_to_api(result,stake,odds,total_lost):
-        try:
-            jsonData = {"result": result, "stake": stake,"odds": odds,"total_lost": total_lost}
-            requests.post(URL, data=jsonData)
-            return True
-        except:
-            print('exception')
-            return False
+    
+    try:
+        jsonData = {"progression":0,"result": result, "stake": stake,"odds": odds,"total_lost": total_lost}
+        requests.post(URL, data=jsonData)
+        return True
+    except:
+        print('exception')
+        return False
             
           
 # start progression:
@@ -51,7 +52,7 @@ def place_bet(odds):
             return [prev_result,stake,result,total_lost]
             
     
-    if(prev_result=='w'):
+    if(prev_result=='w' or prev_result=='d'):
         result=input('Enter match result (w/l)')
         stake=round((Decimal((total_lost+initial_target)/odds)),2)
         if(result=='w'):
