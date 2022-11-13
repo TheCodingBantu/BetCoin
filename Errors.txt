@@ -1,0 +1,2 @@
+ElementClickInterceptedException: Message: element click intercepted
+-- when clicking the x icon to close the betslip after first selection

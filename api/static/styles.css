@@ -1,4 +1,6 @@
-
+body{
+    background-color: #E8EAED;
+}
     .radius-10 {
         border-radius: 10px !important;
     }

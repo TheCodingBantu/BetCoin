@@ -1,17 +1,17 @@
-import requests
-from decimal import Decimal
 import time
+from decimal import Decimal
+
 import requests
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import TimeoutException, ElementClickInterceptedException
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as ec
+from selenium.webdriver.support.ui import WebDriverWait
 
-from extra_functions import stake_calc,save_result,post_to_api
+from extra_functions import post_to_api, save_result, stake_calc
 
 opt = Options()
 opt.add_experimental_option("debuggerAddress", "localhost:9222")
@@ -45,10 +45,7 @@ def click_odds(odds):
            
 
 def func():
-    # switch to double chance
-    d_chance = WebDriverWait(driver, 20).until(ec.visibility_of_element_located(
-        (By.XPATH, '//*[@id="quick-game-matche-container"]/div[3]/ul/li[4]')))
-    d_chance.click()
+    
     # ac_balance = WebDriverWait(driver, 20).until(ec.visibility_of_element_located((By.XPATH,'//*[@id="quick-game-matche-container"]/div[1]/div[2]/div/div/span')))
     first_team = WebDriverWait(driver, 20).until(ec.visibility_of_all_elements_located(
         (By.XPATH, "//*[@id='quick-game-matche-container']/div[5]/div[1] //*[contains(@class, 'teams-cell')]//span[1]")))
@@ -77,102 +74,73 @@ def func():
     away_team = ''
     away_odds = ''
     
-    # get the teams with minumum odd difference
-    diff_list = []
-    
-    for index,( x, y )in enumerate (zip(without_draw[0::], without_draw[1::])):
-        if(index%2 ==0):
-            diff_list.append(abs(Decimal(y.text) - Decimal(x.text)))
-          
-        
-    odd_index=(diff_list.index(min(diff_list)))    
-    equal_odd_team=(arr_one[odd_index*2])
+    current_team=''
+    current_odds=''
     
     for i, (a, b) in enumerate(zip(arr_one, without_draw)):
-
-        if a == equal_odd_team:
-            
+        if a == 'ARS':
+            current_team=a
+            current_odds=b.text
             b.click()
-            time.sleep(1)
-            (WebDriverWait(driver, 20).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="quick-bet-container"]/div/div[1]/img')))).click()
-            time.sleep(1)
-            (without_draw[i+1]).click()
-            
-            away_odds = (without_draw[i+1]).text
-            home_odds = (without_draw[i]).text
-            home_team = a
-            away_team = (arr_one[i+1])
-
+             
+            if ((i+1) % 2 == 0):
+                home_odds = (without_draw[i-1]).text
+                away_odds = (without_draw[i]).text
+                away_team = a
+                home_team = (arr_one[i-1])
+            else:
+                away_odds = (without_draw[i+1]).text
+                home_odds = (without_draw[i]).text
+                home_team = a
+                away_team = (arr_one[i+1])
+                
     print(home_team, home_odds, away_team, away_odds)
     
-    time.sleep(1)
+    odds_input = WebDriverWait(driver, 20).until(ec.visibility_of_element_located((By.XPATH, '//*[@id="quick-bet-container"]/div/div[2]/div[1]/div[2]/div[2]/div[2]/div/div/div/span')))
+
+    odds_input.click()
     
-    input_container=(WebDriverWait(driver, 20).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="quick-game-matche-container"]/div[6]/div[2]/span'))))
-    input_container.click()
-    
-    time.sleep(1)
-    first_odd_input=(WebDriverWait(driver, 20).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="betslip-container"]/div[3]/div[1]/div[1]/div[2]/div[2]/div[2]/div/div/div/div[1]/span[2]'))))
-    first_odd_input.click()
-    time.sleep(1)
     keys = WebDriverWait(driver, 20).until(ec.visibility_of_any_elements_located(
         (By.XPATH, "//span[contains(@class, 'm-keyboard-key')]")))
-
-    # call the stake calculator for the first progresions
     
     (keys[13]).click()
     
-    # home_stake=stake_calc((Decimal(home_odds)-1),'0')
-    # print('home stake: ',home_stake)
-    # click_odds(home_stake)
+    current_stake=stake_calc((Decimal(current_odds)-1),'0')
+    print('stake: ',current_stake)
+    click_odds(current_stake)
+    time.sleep(2)
     
-    click_odds(1)
-    
-    
-    time.sleep(1)
-    # click done on the keyboard
-    done_input=(WebDriverWait(driver, 20).until(ec.visibility_of_element_located((By.XPATH, '//*[@id="betslip-container"]/div[3]/div[1]/div[1]/div[2]/div[2]/div[2]/div/div/div/div[2]/div/div[2]/span'))))
-    done_input.click()
-    
-    time.sleep(1)
-    second_odd_input=(WebDriverWait(driver, 20).until(ec.visibility_of_element_located((By.XPATH, '//*[@id="betslip-container"]/div[3]/div[1]/div[2]/div[2]/div[2]/div[2]/div/div/div/div[1]/span[2]'))))
-    second_odd_input.click()
-    
-    time.sleep(1)
-    keys = WebDriverWait(driver, 20).until(ec.visibility_of_any_elements_located((By.XPATH, "//span[contains(@class, 'm-keyboard-key')]")))
-    
-    (keys[13]).click()
-    # call the stake calculator for the second progresions
-    # stake_calc take in odds, progression
-    # away_stake=stake_calc((Decimal(away_odds)-1),'1')
-    # print('away stake: ',away_stake)
-    
-    # click_odds(away_stake)
-    click_odds(1)
-    
-    time.sleep(1)
-    place_bet = WebDriverWait(driver, 10).until(ec.visibility_of_element_located((By.XPATH, '//*[@id="bet-btn"]')))
-    
+    place_bet = WebDriverWait(driver, 20).until(ec.visibility_of_element_located((By.XPATH, '//*[@id="quick-bet-container"]/div/div[3]/div[2]/div/div[1]')))
     place_bet.click()
     
-    time.sleep(1)
-    confirm = WebDriverWait(driver, 10).until(ec.visibility_of_element_located((By.XPATH, '//*[@id="confirm-btn"]')))
-    confirm.click()
+    
     time.sleep(1)
     try:
-        kick_off = WebDriverWait(driver, 10).until(ec.visibility_of_element_located(
+        confirm = WebDriverWait(driver, 20).until(ec.visibility_of_element_located((By.XPATH, '//*[@id="confirm-btn"]')))
+        confirm.click()
+    except TimeoutException:
+        place_bet = WebDriverWait(driver, 20).until(ec.visibility_of_element_located((By.XPATH, '//*[@id="quick-bet-container"]/div/div[3]/div[2]/div/div[1]')))
+        place_bet.click()
+        
+        confirm = WebDriverWait(driver, 20).until(ec.visibility_of_element_located((By.XPATH, '//*[@id="confirm-btn"]')))
+        confirm.click()
+        
+    time.sleep(1)
+    try:
+        kick_off = WebDriverWait(driver, 20).until(ec.visibility_of_element_located(
             (By.CSS_SELECTOR, '#open-bets-container > div.btn-nav-bottom > div.nav-bottom-right > span > span')))
         kick_off.click()
     except:
-        kick_off = WebDriverWait(driver, 10).until(ec.visibility_of_element_located(
+        kick_off = WebDriverWait(driver, 20).until(ec.visibility_of_element_located(
             (By.CSS_SELECTOR, '#open-bets-container > div.btn-nav-bottom > div.nav-bottom-right > span > span')))
         kick_off.click()
 
-    skip_to_result = WebDriverWait(driver, 10).until(ec.visibility_of_element_located(
+    skip_to_result = WebDriverWait(driver, 20).until(ec.visibility_of_element_located(
         (By.CSS_SELECTOR, '#iv-live-score-running > div.bottom')))
     skip_to_result.click()
 
     for i in range(10):
-        imgs = WebDriverWait(driver, 10).until(
+        imgs = WebDriverWait(driver, 20).until(
             ec.visibility_of_any_elements_located((By.TAG_NAME, 'img')))
         try:
             if (imgs[2]):
@@ -181,29 +149,42 @@ def func():
             break
 
     # get results for both stakes
-    results = WebDriverWait(driver, 10).until(
+    results = WebDriverWait(driver, 20).until(
         ec.visibility_of_all_elements_located((By.CLASS_NAME, 'score')))
     home_result = (results[0]).text
     away_result = (results[1]).text
 
     if home_result > away_result:
+        if(home_team==current_team):
+            # post_to_api('0',home_odds,1,'w',0)
+            save_result('0',current_odds,current_stake,'w')
+            
+        else:
+            # post_to_api('0',home_odds,1,'l',0)
+            save_result('0',current_odds,current_stake,'l')
+          
         print(home_team, 'won with odds', home_odds)
         # save_result('0',home_odds,home_stake,'w')
-        post_to_api('0',home_odds,1,'w',0)
-        post_to_api('1',away_odds,1,'l',0)
         
     elif home_result == away_result:
         print('Draw with odds', home_odds, '', away_odds)
-        post_to_api('0',home_odds,1,'d',0)
-        post_to_api('1',away_odds,1,'d',0)
+        # post_to_api('0',home_odds,1,'l',0)
+        save_result('0',current_odds,current_stake,'l')
+        
        
     else:
+        if(away_team==current_team):
+            # post_to_api('0',home_odds,1,'w',0)
+            save_result('0',current_odds,current_stake,'w')
+            
+        else:
+            # post_to_api('0',home_odds,1,'l',0)
+            save_result('0',current_odds,current_stake,'l')
+            
         print(away_team, 'won with odds', away_odds)
-        post_to_api('0',home_odds,1,'l',0)
-        post_to_api('1',away_odds,1,'w',0)
 
     time.sleep(1)
-    next_round = WebDriverWait(driver, 10).until(ec.visibility_of_element_located(
+    next_round = WebDriverWait(driver, 20).until(ec.visibility_of_element_located(
         (By.CSS_SELECTOR, '#iv-live-score-result > div.btn-nav-bottom > div.nav-bottom-right > span > div > div:nth-child(1)')))
     next_round.click()
     time.sleep(1)

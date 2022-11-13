@@ -87,8 +87,8 @@ def place_bet(odds):
 def main():
     # post_to_api(1,3,1.4,0)
     while True:
-        val=place_bet(0.44)
-        post_to_api(val[2],val[1],1.44,val[3])
+        val=place_bet(0.8)
+        post_to_api(val[2],val[1],1.8,val[3])
         
    
 if __name__=='__main__':
