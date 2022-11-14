@@ -29,11 +29,11 @@ def post_to_api(progression,odds,stake,result,total_lost,balance):
 def stake_calc(odds,progression):
     data=get_last_result(progression)
     if data is None:
-        initial_target=2
+        initial_target=1
         total_lost=0
         prev_result=''
     else:
-        initial_target=2
+        initial_target=1
         prev_result=(data['result'])
         total_lost=(data['total_lost'])
      
@@ -92,7 +92,7 @@ def save_result(progression,odds,stake,result,balance):
     if(prev_result=='l'):
         
         if(result=='w' or result=='d'):
-            total_lost=round((Decimal(abs((Decimal(stake) * Decimal(odds))-Decimal(total_lost)))),2) 
+            total_lost=round((Decimal(abs((Decimal(stake) * Decimal(Decimal(odds)-Decimal(1)))-Decimal(total_lost)))),2) 
             # restart the progression
             post_to_api(progression,odds,stake,result,total_lost,balance)
             

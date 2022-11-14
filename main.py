@@ -77,7 +77,7 @@ def func():
     current_odds=''
     
     for i, (a, b) in enumerate(zip(arr_one, without_draw)):
-        if a == 'ARS':
+        if a == 'MCI':
             current_team=a
             current_odds=b.text
             b.click()
@@ -95,9 +95,14 @@ def func():
                 
     print(home_team, home_odds, away_team, away_odds)
     
-    odds_input = WebDriverWait(driver, 20).until(ec.visibility_of_element_located((By.XPATH, '//*[@id="quick-bet-container"]/div/div[2]/div[1]/div[2]/div[2]/div[2]/div/div/div/span')))
+    try:
+        odds_input = WebDriverWait(driver, 10).until(ec.visibility_of_element_located((By.XPATH, '//*[@id="quick-bet-container"]/div/div[2]/div[1]/div[2]/div[2]/div[2]/div/div/div/span')))
 
-    odds_input.click()
+        odds_input.click()
+    except:
+        odds_input = WebDriverWait(driver, 10).until(ec.visibility_of_element_located((By.XPATH, '//*[@id="quick-bet-container"]/div/div[2]/div[1]/div[2]/div[2]/div[2]/div/div/div/span')))
+
+        odds_input.click()
     
     keys = WebDriverWait(driver, 20).until(ec.visibility_of_any_elements_located(
         (By.XPATH, "//span[contains(@class, 'm-keyboard-key')]")))
@@ -115,7 +120,7 @@ def func():
     
     time.sleep(1)
     try:
-        confirm = WebDriverWait(driver, 20).until(ec.visibility_of_element_located((By.XPATH, '//*[@id="confirm-btn"]')))
+        confirm = WebDriverWait(driver, 10).until(ec.visibility_of_element_located((By.XPATH, '//*[@id="confirm-btn"]')))
         confirm.click()
     except TimeoutException:
         place_bet = WebDriverWait(driver, 20).until(ec.visibility_of_element_located((By.XPATH, '//*[@id="quick-bet-container"]/div/div[3]/div[2]/div/div[1]')))
@@ -126,7 +131,7 @@ def func():
         
     time.sleep(1)
     try:
-        kick_off = WebDriverWait(driver, 20).until(ec.visibility_of_element_located(
+        kick_off = WebDriverWait(driver, 10).until(ec.visibility_of_element_located(
             (By.CSS_SELECTOR, '#open-bets-container > div.btn-nav-bottom > div.nav-bottom-right > span > span')))
         kick_off.click()
     except:

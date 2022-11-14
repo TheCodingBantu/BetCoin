@@ -75,8 +75,9 @@ def place_bet(odds):
         result=input('Enter match result (w/l/d)')
         stake=round((Decimal(((total_lost+initial_target)/2)/odds)),2)
         if(result=='w' or result=='d'):
-            total_lost=round((Decimal(abs((Decimal(stake) * Decimal(odds))-Decimal(total_lost)))),2) 
-            # restart the progression
+            total_lost=round((Decimal(abs((Decimal(stake) * Decimal(Decimal(odds)-Decimal(1)))-Decimal(total_lost)))),2) 
+            
+                # restart the progression
             prev_result='w' or prev_result=='d'
             return [prev_result,stake,result,total_lost,(round((Decimal(balance)),2)-total_lost)]
               
