@@ -66,6 +66,7 @@
             <th>Stake</th>
             <th>Result</th>
             <th>Total Lost</th>
+            <th>Availabe Balance</th>
             <th>Date Created</th>
           </tr>
         </thead>
@@ -79,6 +80,7 @@
             <td>{{ bet.stake }}</td>
             <td>{{ bet.result }}</td>
             <td>{{ bet.total_lost }}</td>
+            <td>{{ bet.balance }}</td>
             <td>{{ bet.date_created|date:"Y-m-d H:i:s" }}</td>
           </tr>
           {% endfor %}

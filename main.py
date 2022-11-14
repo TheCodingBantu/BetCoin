@@ -46,7 +46,6 @@ def click_odds(odds):
 
 def func():
     
-    # ac_balance = WebDriverWait(driver, 20).until(ec.visibility_of_element_located((By.XPATH,'//*[@id="quick-game-matche-container"]/div[1]/div[2]/div/div/span')))
     first_team = WebDriverWait(driver, 20).until(ec.visibility_of_all_elements_located(
         (By.XPATH, "//*[@id='quick-game-matche-container']/div[5]/div[1] //*[contains(@class, 'teams-cell')]//span[1]")))
     second_team = WebDriverWait(driver, 20).until(ec.visibility_of_all_elements_located(
@@ -154,14 +153,17 @@ def func():
     home_result = (results[0]).text
     away_result = (results[1]).text
 
+    ac_balance = (WebDriverWait(driver, 20).until(ec.visibility_of_element_located((By.XPATH,'//*[@id="iv-live-score"]/div[1]/div[2]/div/div/span')))).text
+    print(ac_balance)
     if home_result > away_result:
         if(home_team==current_team):
             # post_to_api('0',home_odds,1,'w',0)
-            save_result('0',current_odds,current_stake,'w')
+            
+            save_result('0',current_odds,current_stake,'w',ac_balance)
             
         else:
             # post_to_api('0',home_odds,1,'l',0)
-            save_result('0',current_odds,current_stake,'l')
+            save_result('0',current_odds,current_stake,'l',ac_balance)
           
         print(home_team, 'won with odds', home_odds)
         # save_result('0',home_odds,home_stake,'w')
@@ -169,17 +171,17 @@ def func():
     elif home_result == away_result:
         print('Draw with odds', home_odds, '', away_odds)
         # post_to_api('0',home_odds,1,'l',0)
-        save_result('0',current_odds,current_stake,'l')
+        save_result('0',current_odds,current_stake,'l',ac_balance)
         
        
     else:
         if(away_team==current_team):
             # post_to_api('0',home_odds,1,'w',0)
-            save_result('0',current_odds,current_stake,'w')
+            save_result('0',current_odds,current_stake,'w',ac_balance)
             
         else:
             # post_to_api('0',home_odds,1,'l',0)
-            save_result('0',current_odds,current_stake,'l')
+            save_result('0',current_odds,current_stake,'l',ac_balance)
             
         print(away_team, 'won with odds', away_odds)
 

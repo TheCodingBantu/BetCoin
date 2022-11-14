@@ -10,7 +10,7 @@ class Bet(models.Model):
     # target=models.CharField(max_length=64)
     # profit=models.CharField(max_length=64)
     total_lost=models.FloatField()
-    # balance=models.CharField(max_length=64)
+    balance=models.CharField(max_length=64)
     date_created=models.DateTimeField()
     
     

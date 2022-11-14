@@ -110,10 +110,8 @@ def func():
     input_container=(WebDriverWait(driver, 20).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="quick-game-matche-container"]/div[6]/div[2]/span'))))
     input_container.click()
     
-    time.sleep(1)
     first_odd_input=(WebDriverWait(driver, 20).until(ec.element_to_be_clickable((By.XPATH, '//*[@id="betslip-container"]/div[3]/div[1]/div[1]/div[2]/div[2]/div[2]/div/div/div/div[1]/span[2]'))))
     first_odd_input.click()
-    time.sleep(1)
     keys = WebDriverWait(driver, 20).until(ec.visibility_of_any_elements_located(
         (By.XPATH, "//span[contains(@class, 'm-keyboard-key')]")))
 
@@ -121,14 +119,11 @@ def func():
     
     (keys[13]).click()
     
-    # home_stake=stake_calc((Decimal(home_odds)-1),'0')
-    # print('home stake: ',home_stake)
-    # click_odds(home_stake)
-    
-    click_odds(1)
+    home_stake=stake_calc((Decimal(home_odds)-1),'0')
+    print('home stake: ',home_stake)
+    click_odds(home_stake)
     
     
-    time.sleep(1)
     # click done on the keyboard
     done_input=(WebDriverWait(driver, 20).until(ec.visibility_of_element_located((By.XPATH, '//*[@id="betslip-container"]/div[3]/div[1]/div[1]/div[2]/div[2]/div[2]/div/div/div/div[2]/div/div[2]/span'))))
     done_input.click()
@@ -137,17 +132,15 @@ def func():
     second_odd_input=(WebDriverWait(driver, 20).until(ec.visibility_of_element_located((By.XPATH, '//*[@id="betslip-container"]/div[3]/div[1]/div[2]/div[2]/div[2]/div[2]/div/div/div/div[1]/span[2]'))))
     second_odd_input.click()
     
-    time.sleep(1)
     keys = WebDriverWait(driver, 20).until(ec.visibility_of_any_elements_located((By.XPATH, "//span[contains(@class, 'm-keyboard-key')]")))
     
     (keys[13]).click()
     # call the stake calculator for the second progresions
     # stake_calc take in odds, progression
-    # away_stake=stake_calc((Decimal(away_odds)-1),'1')
-    # print('away stake: ',away_stake)
+    away_stake=stake_calc((Decimal(away_odds)-1),'1')
+    print('away stake: ',away_stake)
     
-    # click_odds(away_stake)
-    click_odds(1)
+    click_odds(away_stake)
     
     time.sleep(1)
     place_bet = WebDriverWait(driver, 10).until(ec.visibility_of_element_located((By.XPATH, '//*[@id="bet-btn"]')))
@@ -157,7 +150,6 @@ def func():
     time.sleep(1)
     confirm = WebDriverWait(driver, 10).until(ec.visibility_of_element_located((By.XPATH, '//*[@id="confirm-btn"]')))
     confirm.click()
-    time.sleep(1)
     try:
         kick_off = WebDriverWait(driver, 10).until(ec.visibility_of_element_located(
             (By.CSS_SELECTOR, '#open-bets-container > div.btn-nav-bottom > div.nav-bottom-right > span > span')))
@@ -185,24 +177,31 @@ def func():
         ec.visibility_of_all_elements_located((By.CLASS_NAME, 'score')))
     home_result = (results[0]).text
     away_result = (results[1]).text
-
+    ac_balance = (WebDriverWait(driver, 20).until(ec.visibility_of_element_located((By.XPATH,'//*[@id="iv-live-score"]/div[1]/div[2]/div/div/span')))).text
     if home_result > away_result:
         print(home_team, 'won with odds', home_odds)
-        # save_result('0',home_odds,home_stake,'w')
-        post_to_api('0',home_odds,1,'w',0)
-        post_to_api('1',away_odds,1,'l',0)
+        save_result('0',home_odds,home_stake,'w',ac_balance)
+        save_result('1',away_odds,away_stake,'l',ac_balance)
+        
+        # post_to_api('0',home_odds,1,'w',0,ac_balance)
+        # post_to_api('1',away_odds,1,'l',0,ac_balance)
         
     elif home_result == away_result:
+        save_result('0',home_odds,home_stake,'d',ac_balance)
+        save_result('1',away_odds,away_stake,'d',ac_balance)
+        
         print('Draw with odds', home_odds, '', away_odds)
-        post_to_api('0',home_odds,1,'d',0)
-        post_to_api('1',away_odds,1,'d',0)
+        # post_to_api('0',home_odds,1,'d',0,ac_balance)
+        # post_to_api('1',away_odds,1,'d',0,ac_balance)
        
     else:
         print(away_team, 'won with odds', away_odds)
-        post_to_api('0',home_odds,1,'l',0)
-        post_to_api('1',away_odds,1,'w',0)
+        save_result('1',away_odds,away_stake,'w',ac_balance)
+        save_result('0',home_odds,home_stake,'l',ac_balance)
+        
+        # post_to_api('0',home_odds,1,'l',0,ac_balance)
+        # post_to_api('1',away_odds,1,'w',0,ac_balance)
 
-    time.sleep(1)
     next_round = WebDriverWait(driver, 10).until(ec.visibility_of_element_located(
         (By.CSS_SELECTOR, '#iv-live-score-result > div.btn-nav-bottom > div.nav-bottom-right > span > div > div:nth-child(1)')))
     next_round.click()
