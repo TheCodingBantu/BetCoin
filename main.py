@@ -103,11 +103,18 @@ def func():
         odds_input = WebDriverWait(driver, 10).until(ec.visibility_of_element_located((By.XPATH, '//*[@id="quick-bet-container"]/div/div[2]/div[1]/div[2]/div[2]/div[2]/div/div/div/span')))
 
         odds_input.click()
-    
-    keys = WebDriverWait(driver, 20).until(ec.visibility_of_any_elements_located(
-        (By.XPATH, "//span[contains(@class, 'm-keyboard-key')]")))
-    
-    (keys[13]).click()
+    try:
+        keys = WebDriverWait(driver, 10).until(ec.visibility_of_any_elements_located(
+            (By.XPATH, "//span[contains(@class, 'm-keyboard-key')]")))
+        
+        (keys[13]).click()
+    except:
+        odds_input = WebDriverWait(driver, 10).until(ec.visibility_of_element_located((By.XPATH, '//*[@id="quick-bet-container"]/div/div[2]/div[1]/div[2]/div[2]/div[2]/div/div/div/span')))
+        odds_input.click()
+        
+        keys = WebDriverWait(driver, 10).until(ec.visibility_of_any_elements_located(
+            (By.XPATH, "//span[contains(@class, 'm-keyboard-key')]")))
+        (keys[13]).click()
     
     current_stake=stake_calc((Decimal(current_odds)-1),'0')
     print('stake: ',current_stake)
@@ -164,7 +171,7 @@ def func():
         if(home_team==current_team):
             # post_to_api('0',home_odds,1,'w',0)
             
-            save_result('0',current_odds,current_stake,'w',ac_balance)
+            save_result('0',current_odds,current_stake-1,'w',ac_balance)
             
         else:
             # post_to_api('0',home_odds,1,'l',0)

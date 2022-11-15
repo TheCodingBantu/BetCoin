@@ -31,12 +31,12 @@ def place_bet(odds):
     
     data=get_last_result()
     if data is None:
-        initial_target=1
+        initial_target=2
         total_lost=0
         prev_result=''
         balance=1000 #initial dummy amount
     else:
-        initial_target=1
+        initial_target=2
         prev_result=(data['result'])
         total_lost=(data['total_lost'])
         balance=(data['balance'])
@@ -44,55 +44,64 @@ def place_bet(odds):
     if(prev_result==''):
         # if we are starting a new progression
         stake=round((Decimal(initial_target/odds)),2)
+        print(odds,stake)
         result=input('Enter match result (w/l/d)')
         if(result=='w' or result=='d'):
             total_lost=0
             # restart the progression
             prev_result=''
-            return [prev_result,stake,result,total_lost,(round((Decimal(balance)),2)-total_lost)]
+            return [prev_result,stake,result,total_lost]
         elif(result=='l'):
             total_lost=stake
             prev_result='l'
-            return [prev_result,stake,result,total_lost,(round((Decimal(balance)),2)-total_lost)]
+            return [prev_result,stake,result,total_lost]
             
     
     if(prev_result=='w' or prev_result=='d'):
         result=input('Enter match result (w/l/d)')
         stake=round((Decimal((total_lost+initial_target)/odds)),2)
+        
+        print(odds,stake)
+        
         if(result=='w' or result=='d'):
             total_lost= 0
             # restart the progression
             prev_result=''
-            return [prev_result,stake,result,total_lost, (round((Decimal(balance)),2)-total_lost)]
+            return [prev_result,stake,result,total_lost]
             
         elif(result=='l'):
             total_lost=stake
             prev_result='l'
-            return [prev_result,stake,result,total_lost,(round((Decimal(balance)),2)-total_lost)]
+            return [prev_result,stake,result,total_lost]
             
               
     if(prev_result=='l'):
         result=input('Enter match result (w/l/d)')
-        stake=round((Decimal(((total_lost+initial_target)/2)/odds)),2)
+        stake=round((Decimal(Decimal((total_lost+initial_target)/2)/(odds))),2)
+        
+        print(odds,stake)
+        
         if(result=='w' or result=='d'):
-            total_lost=round((Decimal(abs((Decimal(stake) * Decimal(Decimal(odds)-Decimal(1)))-Decimal(total_lost)))),2) 
+            total_lost=round((Decimal(abs((Decimal(stake) * Decimal(odds))-Decimal(total_lost)))),2) 
             
                 # restart the progression
             prev_result='w' or prev_result=='d'
-            return [prev_result,stake,result,total_lost,(round((Decimal(balance)),2)-total_lost)]
+            return [prev_result,stake,result,total_lost]
               
         elif(result=='l'):
+            
             total_lost = round(Decimal(total_lost)+ Decimal(stake),2)
             prev_result='l'
-            return [prev_result,stake,result,total_lost,(round((Decimal(balance)),2)-total_lost)]
+            return [prev_result,stake,result,total_lost]
  
               
 def main():
     # post_to_api(1,3,1.4,0)
     while True:
-        val=place_bet(0.8)
+        odds=Decimal(input('enter odds'))
+        val=place_bet(odds)
         
-        post_to_api(val[2],val[1],1.8,val[4],val[3])
+        post_to_api(val[2],val[1],odds,0,val[3])
         
    
 if __name__=='__main__':
