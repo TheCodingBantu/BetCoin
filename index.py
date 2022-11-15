@@ -206,7 +206,7 @@ def func():
         (By.CSS_SELECTOR, '#iv-live-score-result > div.btn-nav-bottom > div.nav-bottom-right > span > div > div:nth-child(1)')))
     next_round.click()
     time.sleep(1)
-func()
+
 
 while True:
     func()

@@ -1,5 +1,6 @@
 import time
 from decimal import Decimal
+from pygame import mixer
 
 import requests
 from selenium import webdriver
@@ -202,7 +203,21 @@ def func():
         (By.CSS_SELECTOR, '#iv-live-score-result > div.btn-nav-bottom > div.nav-bottom-right > span > div > div:nth-child(1)')))
     next_round.click()
     time.sleep(1)
-func()
 
 while True:
-    func()
+    try:
+        
+        func()
+    except:
+
+        mixer.init()
+
+        #Load audio file
+        mixer.music.load('alert.mp3')
+        mixer.music.set_volume(0.7)
+        #Play the music
+        while True:
+            
+            mixer.music.play()
+            time.sleep(5)
+        

@@ -67,6 +67,9 @@ def Graphs(request):
     # get date for each confirmed win
     all_dates_one = Bet.objects.filter(progression=0)
     all_dates_two = Bet.objects.filter(progression=1)
+    
+    highest_stake = (Bet.objects.all().order_by('-total_lost')[0])
+    
 
     for index, i in enumerate(all_dates_one):
         for j in (get_wins(Bet.objects.filter(progression=0))[1]):
@@ -94,7 +97,7 @@ def Graphs(request):
                   {'one': bet_one, 'two': bet_two, 
                    'win_count_one': win_count_one, 'win_count_two': win_count_two, 
                    'win_dates_one': win_dates_one,'win_data_one':win_data_one,
-                   'win_dates_two': win_dates_two,'win_data_two':win_data_two})
+                   'win_dates_two': win_dates_two,'win_data_two':win_data_two,'highest_stake':highest_stake})
 
 def get_wins(results):
     my_list = []
