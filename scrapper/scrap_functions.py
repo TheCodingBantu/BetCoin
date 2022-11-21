@@ -17,7 +17,7 @@ service = Service(executable_path="Drivers/chromedriver.exe")
 driver = webdriver.Chrome(service=service, options=opt)
 
 driver.switch_to.new_window('tab')
-driver.get("https://www.sportybet.com/ke/m/sporty-instant-virtuals/quickgame")
+driver.get("")
 
 URL = "http://127.0.0.1:8000/bets/"
 
