@@ -17,8 +17,7 @@ service = Service(executable_path="Drivers/chromedriver.exe")
 driver = webdriver.Chrome(service=service, options=opt)
 
 driver.switch_to.new_window('tab')
-driver.get("https://www.sportybet.com/ke/m/sporty-instant-virtuals/quickgame")
-
+driver.get("")
 
     
 first_team = WebDriverWait(driver, 20).until(ec.visibility_of_all_elements_located(
